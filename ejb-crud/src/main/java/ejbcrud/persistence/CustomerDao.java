@@ -20,7 +20,6 @@ public class CustomerDao {
 
     private Map<Long, Customer> repository = new HashMap<>();
 
-    @Lock(LockType.READ)
     public Customer create(String name) {
         Customer customer = new Customer();
         customer.setId(keySequence.incrementAndGet());
@@ -29,6 +28,7 @@ public class CustomerDao {
         return null;
     }
 
+    @Lock(LockType.READ)
     public Customer read (long id) {
         return repository.get(id);
     }
