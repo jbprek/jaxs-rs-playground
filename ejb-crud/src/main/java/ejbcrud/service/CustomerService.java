@@ -34,9 +34,10 @@ import java.util.logging.Logger;
 @Path("/customers")
 public class CustomerService {
 
-    private static final Logger log = Logger.getLogger(CustomerService.class.getName());
+    @Inject
+    private Logger log;
 
-    @EJB
+    @Inject
     private CustomerDao dao;
 
     @Inject
@@ -45,21 +46,18 @@ public class CustomerService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Customer create(@PathParam("name")String name) {
-        Customer c = dao.create(name);
-        return c;
+    public Customer create(String name) {
 
-        Response.ResponseBuilder builder = null;
+
 
         try {
-            // Validates member using bean validation
-            Customer customer = new Customer()
-            validateCustomer(member);
+            Customer customer = dao.create(name);
 
-            registration.register(member);
+            validateCustomer(customer);
 
-            // Create an "ok" response
-            builder = Response.ok();
+            Response.ResponseBuilder builder = null;
+
+            builder = Response.ok(); = Response.ok();
         } catch (ConstraintViolationException ce) {
             // Handle bean validation issues
             builder = createViolationResponse(ce.getConstraintViolations());
