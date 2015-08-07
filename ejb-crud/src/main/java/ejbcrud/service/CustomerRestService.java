@@ -14,14 +14,17 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -32,7 +35,7 @@ import java.util.logging.Logger;
 
 @Stateless
 @Path("/customers")
-public class CustomerService {
+public class CustomerRestService {
 
     @Inject
     private Logger log;
@@ -43,29 +46,27 @@ public class CustomerService {
     @Inject
     private Validator validator;
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<Customer> listAllMembers() {
+        return dao.findAll();
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Customer create(String name) {
-
-
+    public Response create(String name) {
+        Response.ResponseBuilder builder = null;
 
         try {
             Customer customer = dao.create(name);
 
             validateCustomer(customer);
 
-            Response.ResponseBuilder builder = null;
-
-            builder = Response.ok(); = Response.ok();
+            builder = Response.ok();
         } catch (ConstraintViolationException ce) {
             // Handle bean validation issues
             builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
         } catch (Exception e) {
             // Handle generic exceptions
             Map<String, String> responseObj = new HashMap<>();
@@ -90,19 +91,17 @@ public class CustomerService {
     }
 
     @Path("/update")
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Customer update(Customer updated) {
-        return dao.update(updated);
+    public void update(Customer updated) {
+        dao.update(updated);
     }
 
     @Path("/delete/{id}")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Customer delete(@PathParam("id")long id) {
-        return dao.delete(id);
+    public void delete(@PathParam("id")long id) {
+         dao.delete(id);
     }
 
     private void validateCustomer(Customer member) throws ConstraintViolationException, ValidationException {

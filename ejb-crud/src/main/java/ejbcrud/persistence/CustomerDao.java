@@ -5,6 +5,7 @@ import ejbcrud.model.Customer;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +20,11 @@ public class CustomerDao {
     private AtomicLong keySequence = new AtomicLong(0);
 
     private Map<Long, Customer> repository = new HashMap<>();
+
+
+    public Collection<Customer> findAll() {
+        return repository.values();
+    }
 
     public Customer create(String name) {
         Customer customer = new Customer();
