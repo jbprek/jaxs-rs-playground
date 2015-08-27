@@ -16,6 +16,7 @@
     <modules>
         <module>kitchensink-angularjs</module>
         <module>ejb-crud</module>
+        <module>jackson-use</module>
     </modules>
 
     <properties>
