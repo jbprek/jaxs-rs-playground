@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 /**
  * @author prekezes.
  */
@@ -7,7 +9,6 @@ public class Detail {
     private Long id;
     private String info;
     private DetailStatus status;
-
 
     public Long getId() {
         return id;
@@ -31,5 +32,20 @@ public class Detail {
 
     public void setStatus(DetailStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Detail detail = (Detail) o;
+        return Objects.equals(id, detail.id) &&
+                Objects.equals(info, detail.info) &&
+                Objects.equals(status, detail.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, info, status);
     }
 }

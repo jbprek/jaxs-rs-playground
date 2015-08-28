@@ -4,11 +4,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author prekezes.
  */
-@XmlRootElement
 public class Master {
 
     private String name;
@@ -37,5 +37,20 @@ public class Master {
 
     public void setDetailMap(Map<Long, Detail> detailMap) {
         this.detailMap = detailMap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Master master = (Master) o;
+        return Objects.equals(name, master.name) &&
+                Objects.equals(creationTime, master.creationTime) &&
+                Objects.equals(detailMap, master.detailMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, creationTime, detailMap);
     }
 }

@@ -2,16 +2,15 @@ package model;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 
 /**
- * Jackson DataBind example
+ * Jackson DataBind example, augmented with getter and setters, hashCode and equals
  */
 public class MyValue {
     public String name;
     public int age;
     public Instant date;
-    // NOTE: if using getters/setters, can keep fields `protected` or `private`
-
 
     public String getName() {
         return name;
@@ -35,5 +34,20 @@ public class MyValue {
 
     public void setDate(Instant date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MyValue myValue = (MyValue) o;
+        return Objects.equals(age, myValue.age) &&
+                Objects.equals(name, myValue.name) &&
+                Objects.equals(date, myValue.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, date);
     }
 }
